@@ -1,0 +1,41 @@
+# Makefile for various ffmpeg and mpv commands
+
+# Default variables for input and output files
+INPUT ?= input.mp4
+OUTPUT ?= output.mp4
+PLAYLIST ?= playlist.txt
+STREAM_URL ?= rtmp://172.17.0.3/live/test
+
+# NVIDIA hardware-accelerated conversion
+convert_hw:
+	ffmpeg -i $(INPUT) \
+		-vf "scale=-1:720, pad=1280:720:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
+		-c:v h264_nvenc -preset slow -rc:v vbr -cq:v 23 -b:v 2000k -maxrate 2500k -bufsize 5000k \
+		-profile:v high -level:v 4.1 -movflags +faststart -pix_fmt yuv420p \
+		-colorspace bt709 -color_primaries bt709 -color_trc bt709 \
+		-c:a aac -b:a 128k -ar 48000 -ac 2 -af "volume=1.0" \
+		-metadata title="Converted Video" -metadata author="Your Name" -metadata comment="This is a converted video." \
+		-gpu 0 -f mp4 $(OUTPUT)
+
+# Software-based conversion
+convert_sw:
+	ffmpeg -i $(INPUT) \
+		-vf "scale=-1:720, pad=1280:720:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
+		-c:v libx264 -preset slow -crf 23 -b:v 2000k -maxrate 2500k -bufsize 5000k \
+		-profile:v high -level:v 4.1 -movflags +faststart -pix_fmt yuv420p \
+		-colorspace bt709 -color_primaries bt709 -color_trc bt709 \
+		-c:a aac -b:a 128k -ar 48000 -ac 2 -af "volume=1.0" \
+		-metadata title="Converted Video" -metadata author="Your Name" -metadata comment="This is a converted video." \
+		-f mp4 $(OUTPUT)
+
+# Play stream with MPV
+play_stream:
+	mpv $(STREAM_URL) --video-sync=display-resample
+
+# Stream to server
+stream_to_server:
+	ffmpeg -re -f concat -safe 0 -i $(PLAYLIST) \
+		-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 10000k -pix_fmt yuv420p -g 60 \
+		-c:a aac -b:a 256k -ar 48000 -f flv $(STREAM_URL)
+
+.PHONY: convert_hw convert_sw play_stream stream_to_server
