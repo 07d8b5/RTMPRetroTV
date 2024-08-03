@@ -6,6 +6,13 @@ OUTPUT ?= output.mp4
 PLAYLIST ?= playlist.txt
 STREAM_URL ?= rtmp://172.17.0.3/live/test
 
+run:
+	python src/main.py
+
+lint:
+	ruff check src/
+	ruff format src/
+
 # NVIDIA hardware-accelerated conversion
 convert_hw:
 	ffmpeg -i $(INPUT) \
@@ -34,8 +41,8 @@ play_stream:
 
 # Stream to server
 stream_to_server:
-	ffmpeg -re -f concat -safe 0 -i $(PLAYLIST) \
+	ffmpeg -v verbose -re -f concat -safe 0 -i $(PLAYLIST) \
 		-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 10000k -pix_fmt yuv420p -g 60 \
-		-c:a aac -b:a 256k -ar 48000 -f flv $(STREAM_URL)
+		-c:a aac -b:a 256k -ar 48000 -f flv $(STREAM_URL) 2>&1 | grep --line-buffered 'Auto' >> log_file.log
 
 .PHONY: convert_hw convert_sw play_stream stream_to_server
