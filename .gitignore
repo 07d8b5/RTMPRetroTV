@@ -1,4 +1,2 @@
-*.mp4
-!fallback.mp4
 src/__pycache__/
 venv/

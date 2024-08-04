@@ -1,0 +1,37 @@
+tv_station:
+  name: ExampleTV
+  block_size: 30
+  schedule:
+    - day: 0
+      time_slots:
+        - time: "7:08"
+          program: "LooneyTunes"
+          selection_method: "shuffle"
+    - day: 1
+      time_slots:
+        - time: "7:08"
+          program: "LooneyTunes"
+          selection_method: "shuffle"
+    - day: 6
+      time_slots:
+        - time: "9:14"
+          program: "LooneyTunes"
+          selection_method: "sequential"
+        - time: "20:30"
+          program: "LooneyTunes"
+          selection_method: "shuffle"
+paths:
+  show_metadata:
+    source_directory: "./"
+  commercials:
+    source_directory: "video/cm/"
+    episodes:
+      - "ILoveTokyo.mp4"
+      - "Isis.mp4"
+      - "Kowa.mp4"
+      - "Penck.mp4"
+  LooneyTunes:
+    source_directory: "video/shows/LooneyTunes/"
+    episodes:
+      - "ScrapHappyDaffy.mp4"
+      - "TokioJokio.mp4"
