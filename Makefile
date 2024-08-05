@@ -6,6 +6,23 @@ OUTPUT ?= output.mp4
 PLAYLIST ?= playlist.txt
 STREAM_URL ?= rtmp://172.17.0.3/live/test
 
+VENV_DIR := venv
+PYTHON := python3
+PIP := $(VENV_DIR)/bin/pip
+
+venv:
+	@$(PYTHON) -m venv $(VENV_DIR)
+	@echo "Virtual environment created in $(VENV_DIR)"
+
+install: venv
+	@$(PIP) install --upgrade pip
+	@$(PIP) install -r requirements.txt
+	@echo "Dependencies installed"
+
+clean:
+	@rm -rf $(VENV_DIR)
+	@echo "Virtual environment removed"
+
 run:
 	python src/main.py
 
@@ -45,4 +62,4 @@ stream_to_server:
 		-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 10000k -pix_fmt yuv420p -g 60 \
 		-c:a aac -b:a 256k -ar 48000 -f flv $(STREAM_URL) 2>&1 | grep --line-buffered 'Auto' >> log_file.log
 
-.PHONY: convert_hw convert_sw play_stream stream_to_server
+.PHONY: venv install clean convert_hw convert_sw play_stream stream_to_server

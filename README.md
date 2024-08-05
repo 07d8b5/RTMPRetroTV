@@ -1,8 +1,12 @@
 # RTMPRetroTV
 
 ## Running the project
+Install dependencies through a virtual environment: 
+```bash
+make install
+```
 
-To run the project, use the following command:
+Run the project:
 ```bash
 make run
 ```
