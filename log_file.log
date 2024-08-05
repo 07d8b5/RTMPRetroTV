@@ -1380,3 +1380,5 @@ frame=21834 fps= 30 q=29.0 size=  108682KiB time=00:12:08.30 bitrate=1222.5kbits
 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x758c4c035700] Auto-inserting h264_mp4toannexb bitstream filter
 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x758c4c035280] Auto-inserting h264_mp4toannexb bitstream filter
 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x758c4c02e780] Auto-inserting h264_mp4toannexb bitstream filter
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5c6999108100] Auto-inserting h264_mp4toannexb bitstream filter
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x64f3c1581100] Auto-inserting h264_mp4toannexb bitstream filter
