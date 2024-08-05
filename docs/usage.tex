@@ -1,0 +1,186 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+
+% Define colors for code syntax highlighting
+\definecolor{keyword}{rgb}{0.8, 0.1, 0.1}
+\definecolor{comment}{rgb}{0.3, 0.4, 0.4}
+\definecolor{string}{rgb}{0.1, 0.6, 0.1}
+
+% Set up code listing style
+
+% Define custom YAML language for listings
+\lstdefinelanguage{yaml}{
+	keywords={true,false,null,y,n},
+	keywordstyle=\color{keyword}\bfseries,
+	basicstyle=\ttfamily\small,
+	sensitive=false,
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{comment}\itshape,
+	stringstyle=\color{string},
+	moredelim=[l][\color{string}]{\ },
+	morestring=[b]',
+	morestring=[b]",
+	literate={-}{{-}}{1} % ensure that dashes are handled properly
+}
+
+\lstset{
+	language=yaml, % Set YAML as the default language
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{keyword}\bfseries,
+	commentstyle=\color{comment}\itshape,
+	stringstyle=\color{string},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	backgroundcolor=\color{white},
+	showspaces=false,
+	showstringspaces=false,
+	breaklines=true,
+	frame=single, % Add a frame around the listing
+	tabsize=2,    % Reduce tab size to 2 spaces
+	keepspaces=true % Preserve spaces for indentation
+}
+
+\title{Usage Documentation}
+\author{RTMPRetroTV}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{abstract}
+		This document provides detailed usage instructions and examples for the \emph{RTMPRetroTV} tool. It includes installation instructions and additional notes to help you get started.
+	\end{abstract}
+	
+	\tableofcontents
+	
+	\section{Introduction}
+	RTMPRetroTV is a command-line tool designed to simplify the process of creating your own old-school broadcast channel. It leverages \texttt{ffmpeg} to stream video content to an RTMP server, allowing users to emulate the experience of traditional TV broadcasts.
+
+	\subsection{How It Works}
+
+	\begin{itemize}
+		\item \textbf{YAML Configuration:} Users define a schedule in a YAML file, listing video files and the exact times they should be streamed. This configuration acts as the programming guide for your channel.
+	
+		\item \textbf{Automated Streaming:} RTMPRetroTV reads the YAML file and uses \texttt{ffmpeg} to automatically stream each video to the designated RTMP server at the specified times. This ensures that your content plays like a traditional TV channel, complete with scheduled programming.
+	
+		\item \textbf{Use Cases:} Ideal for anyone looking to recreate the nostalgic experience of scheduled TV programming, RTMPRetroTV is perfect for themed broadcasts, retro TV channels, or continuous playlists that mimic the feel of classic television.
+	\end{itemize}
+
+	By simplifying the process of setting up a streaming schedule, RTMPRetroTV enables users to deliver content in a way that harkens back to the golden age of television broadcasting.
+
+	\section{Installation}
+	Describe the steps required to install your project. Include any dependencies and how to resolve them.
+	
+	\begin{verbatim}
+		$ git clone https://github.com/07d8b5/RTMPRetroTV.git
+		$ cd RTMPRetroTV
+		$ pip install -r requirements.txt
+	\end{verbatim}
+	
+	\section{Usage}
+	
+	This section explains how to use RTMPRetroTV with the provided \texttt{config/schedule.yaml} configuration file. Follow these steps to customize and run your own broadcast channel.
+	
+	\subsection{Prepare Your Video Files}
+	
+	Before configuring RTMPRetroTV, ensure that all your video files are ready:
+	
+	\begin{itemize}
+		\item \textbf{Ensure Uniform Video Format:} All videos, including scheduled programs and commercials, must be encoded in the exact same format. This includes the same codec, resolution, frame rate, and audio settings. This uniformity ensures seamless playback without interruptions or compatibility issues.
+		
+		\item \textbf{Create a Fallback Video:} Prepare a 1-second fallback video file. This file acts as a placeholder in case of any scheduling or playback errors. Place this file in the `videos/` directory as specified in the YAML configuration.
+	\end{itemize}
+	
+	\subsection{Review the Provided \texttt{schedule.yaml} File}
+	
+	RTMPRetroTV includes an example \texttt{schedule.yaml} file that outlines a setup for a TV station. Below is the structure of the file:
+	
+	\begin{lstlisting}[language=yaml]
+tv_station:
+	name: ExampleTV
+	block_size: 30
+	schedule:
+		- day: 0
+			time_slots:
+				- time: "7:08"
+					program: "LooneyTunes"
+					selection_method: "shuffle"
+		- day: 1
+			time_slots:
+				- time: "7:08"
+					program: "LooneyTunes"
+					selection_method: "shuffle"
+		- day: 6
+			time_slots:
+				- time: "9:14"
+					program: "LooneyTunes"
+					selection_method: "sequential"
+				- time: "20:30"
+					program: "LooneyTunes"
+					selection_method: "shuffle"
+
+paths:
+	show_metadata:
+		source_directory: "./"
+	commercials:
+		source_directory: "video/cm/"
+		episodes:
+			- "ILoveTokyo.mp4"
+			- "Isis.mp4"
+			- "Kowa.mp4"
+			- "Penck.mp4"
+	LooneyTunes:
+		source_directory: "video/shows/LooneyTunes/"
+		episodes:
+			- "ScrapHappyDaffy.mp4"
+			- "TokioJokio.mp4"
+	\end{lstlisting}
+	
+	\subsection{Configuration Details}
+	
+	\begin{itemize}
+		\item \textbf{tv\_station:}
+		\begin{itemize}
+			\item \textbf{name:} Specifies the name of the TV station.
+			\item \textbf{block\_size:} CURRENTLY UNIMPLEMENTED Defines the duration (in minutes) for each programming block.
+			\item \textbf{schedule:} Lists the programming schedule, specifying the day of the week (0 for Sunday, 6 for Saturday) and the time slots for each program.
+			\item \textbf{time\_slots:} Indicates the time, program name, and selection method (e.g., \texttt{shuffle} or \texttt{sequential}) for the episodes.
+		\end{itemize}
+		
+		\item \textbf{paths:}
+		\begin{itemize}
+			\item \textbf{show\_metadata:} Directory containing metadata files for the shows.
+			\item \textbf{commercials:} Path to the directory and list of commercial episodes available for insertion during breaks.
+			\item \textbf{LooneyTunes:} Path to the directory containing episodes for the \texttt{LooneyTunes} program.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsection{Run RTMPRetroTV}
+	
+	Once you have customized the YAML configuration, run RTMPRetroTV with the following command:
+	
+	\begin{verbatim}
+		$ cd /path/to/RTMPRetroTV
+		$ make run
+	\end{verbatim}
+	
+	This command initiates the streaming process, using the settings from your customized \texttt{config/schedule.yaml} to broadcast according to the specified schedule.
+	
+	\subsection{Additional Tips}
+	
+	\begin{itemize}
+		\item Verify that all file paths and filenames in your YAML configuration are accurate.
+		\item Test your setup with a short schedule to ensure everything functions correctly before a full broadcast.
+		\item Confirm that your RTMP server is operational and ready to receive streams from RTMPRetroTV.
+	\end{itemize}
+	
+	By following these steps, you can set up RTMPRetroTV to emulate an old-school TV broadcast channel, complete with scheduled programming and commercial breaks.
+	
+\end{document}
