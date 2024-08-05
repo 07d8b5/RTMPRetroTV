@@ -1,2 +1,5 @@
+log_file.log
+upnext.txt
+playlist.txt
 src/__pycache__/
 venv/
