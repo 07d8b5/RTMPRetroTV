@@ -1,4 +1,5 @@
-*.mp4
-!fallback.mp4
+log_file.log
+upnext.txt
+playlist.txt
 src/__pycache__/
 venv/

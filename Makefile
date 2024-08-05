@@ -33,7 +33,7 @@ lint:
 # NVIDIA hardware-accelerated conversion
 convert_hw:
 	ffmpeg -i $(INPUT) \
-		-vf "scale=-1:720, pad=1280:720:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
+		-vf "scale=-1:480, pad=854:480:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
 		-c:v h264_nvenc -preset slow -rc:v vbr -cq:v 23 -b:v 2000k -maxrate 2500k -bufsize 5000k \
 		-profile:v high -level:v 4.1 -movflags +faststart -pix_fmt yuv420p \
 		-colorspace bt709 -color_primaries bt709 -color_trc bt709 \
@@ -44,7 +44,7 @@ convert_hw:
 # Software-based conversion
 convert_sw:
 	ffmpeg -i $(INPUT) \
-		-vf "scale=-1:720, pad=1280:720:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
+		-vf "scale=-1:480, pad=854:480:(ow-iw)/2:(oh-ih)/2, fps=30, format=nv12" \
 		-c:v libx264 -preset slow -crf 23 -b:v 2000k -maxrate 2500k -bufsize 5000k \
 		-profile:v high -level:v 4.1 -movflags +faststart -pix_fmt yuv420p \
 		-colorspace bt709 -color_primaries bt709 -color_trc bt709 \
